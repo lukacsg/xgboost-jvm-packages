@@ -23,10 +23,10 @@ XGBoost4J Code Examples
 * [External Memory](src/main/scala/ml/dmlc/xgboost4j/scala/example/ExternalMemory.scala)
 
 ## Flink API
-###stream
+### stream
 * [Distributed Training and Predict with Flink](https://github.com/streamline-eu/xgboost-jvm-packages/blob/master/jvm-packages/xgboost4j-example/src/main/scala/ml/dmlc/xgboost4j/scala/example/flink/stream/FlinkTrainAndTest.scala)
 * [Distributed Training and Predict with Flink with config file support](https://github.com/streamline-eu/xgboost-jvm-packages/blob/master/jvm-packages/xgboost4j-example/src/main/scala/ml/dmlc/xgboost4j/scala/example/flink/stream/FlinkTrainAndTestWithConfigFile.scala)
-###batch
+### batch
 * [Distributed Training and Predict with Flink](https://github.com/streamline-eu/xgboost-jvm-packages/blob/master/jvm-packages/xgboost4j-example/src/main/scala/ml/dmlc/xgboost4j/scala/example/flink/batch/FlinkTrainAndTest.scala)
 * [Distributed Training and Predict with Flink with config file support](https://github.com/streamline-eu/xgboost-jvm-packages/blob/master/jvm-packages/xgboost4j-example/src/main/scala/ml/dmlc/xgboost4j/scala/example/flink/batch/FlinkTrainAndTestWithConfigFile.scala)
 
