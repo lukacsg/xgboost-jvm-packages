@@ -22,8 +22,13 @@ XGBoost4J Code Examples
 * [Predicting leaf indices](src/main/scala/ml/dmlc/xgboost4j/scala/example/PredictLeafIndices.scala)
 * [External Memory](src/main/scala/ml/dmlc/xgboost4j/scala/example/ExternalMemory.scala)
 
+## Flink API
+###stream
+* [Distributed Training and Predict with Flink](https://github.com/streamline-eu/xgboost-jvm-packages/blob/master/jvm-packages/xgboost4j-example/src/main/scala/ml/dmlc/xgboost4j/scala/example/flink/stream/FlinkTrainAndTest.scala)
+* [Distributed Training and Predict with Flink with config file support](https://github.com/streamline-eu/xgboost-jvm-packages/blob/master/jvm-packages/xgboost4j-example/src/main/scala/ml/dmlc/xgboost4j/scala/example/flink/stream/FlinkTrainAndTestWithConfigFile.scala)
+###batch
+* [Distributed Training and Predict with Flink](https://github.com/streamline-eu/xgboost-jvm-packages/blob/master/jvm-packages/xgboost4j-example/src/main/scala/ml/dmlc/xgboost4j/scala/example/flink/batch/FlinkTrainAndTest.scala)
+* [Distributed Training and Predict with Flink with config file support](https://github.com/streamline-eu/xgboost-jvm-packages/blob/master/jvm-packages/xgboost4j-example/src/main/scala/ml/dmlc/xgboost4j/scala/example/flink/batch/FlinkTrainAndTestWithConfigFile.scala)
+
 ## Spark API
 * [Distributed Training with Spark](src/main/scala/ml/dmlc/xgboost4j/scala/example/spark/DistTrainWithSpark.scala)
-
-## Flink API
-* [Distributed Training with Flink](src/main/scala/ml/dmlc/xgboost4j/scala/example/flink/DistTrainWithFlink.scala)
