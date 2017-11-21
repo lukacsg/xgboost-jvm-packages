@@ -48,6 +48,90 @@ object XGBoostScalaExample {
 }
 ```
 
+### XGBoost Flink
+#### stream
+```scala
+import ml.dmlc.xgboost4j.scala.flink.XGBoostModel
+import ml.dmlc.xgboost4j.scala.flink.stream.XGBoost
+import ml.dmlc.xgboost4j.scala.flink.utils.MLStreamUtils
+import org.apache.flink.streaming.api.scala._
+
+/**
+  * Train and test an XGBoost model with flink stream API.
+  */
+object DistTrainWithFlink {
+  def main(args: Array[String]) {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    // parallelism of the file read
+    val readParallelism = 1
+    // number of parallelism
+    val numberOfParallelism = 1
+    // dimension of the training data
+    val dimension = 126
+    // read training data
+    val trainPath = "/path/to/data/agaricus.txt.train"
+    val testPath = "/path/to/data/agaricus.txt.test"
+    // define parameters
+    val paramMap = List(
+      "eta" -> 0.1,
+      "max_depth" -> 2,
+      "objective" -> "binary:logistic").toMap
+    // number of iterations
+    val round = 2
+    // train the model then predict
+    XGBoost.trainAndPredict(
+          MLStreamUtils.readLibSVM(env, trainPath, dimension, readParallelism),
+          MLStreamUtils.readLibSVM(env, testPath, dimension, readParallelism),
+          paramMap, round, numberOfParallelism)
+          .addSink(q => logger.info("result: " + q.deep.mkString("[", ",", "]")))
+          .setParallelism(1)
+    env.execute()
+  }
+}
+```
+#### batch
+```scala
+import ml.dmlc.xgboost4j.scala.DMatrix
+import ml.dmlc.xgboost4j.scala.example.flink.utils.{Action, ParametersUtil}
+import ml.dmlc.xgboost4j.scala.example.util.CustomEval
+import ml.dmlc.xgboost4j.scala.flink.XGBoostModel
+import ml.dmlc.xgboost4j.scala.flink.batch.XGBoost
+import org.apache.flink.api.scala.{ExecutionEnvironment, _}
+import org.apache.flink.ml.MLUtils
+
+/**
+  * Train and test an XGBoost model with flink batch API.
+  */
+object DistTrainWithFlink {
+  def main(args: Array[String]) {
+    val start = System.currentTimeMillis()
+    val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
+    // number of parallelism
+    val numberOfParallelism = 1
+    // read training data
+    val trainPath = "/path/to/data/agaricus.txt.train"
+    val testPath = "/path/to/data/agaricus.txt.test"
+    val validationMatrix = new DMatrix("/path/to/data/agaricus.txt.test")
+    val eval = new CustomEval()
+
+    val modelPath = "/data/lukacsg/sandbox/xgboosttestmodel/model"
+    // define parameters for train
+    val paramMap = List(
+//      "eta" -> 0.1,
+      "max_depth" -> 2,
+      "objective" -> "binary:logistic").toMap
+    // number of iterations
+    val round = 2
+    val prediction = XGBoost.trainAndPredict(MLUtils.readLibSVM(env, trainPath),
+        MLUtils.readLibSVM(env, testPath),
+        paramMap, round, numberOfParallelism)
+    // test the prediction
+      println(eval.eval(prediction, validationMatrix.jDMatrix) * 100 + "%")
+  }
+}
+```
+Additional flink examples can be found in [xgboost4j-example](https://github.com/streamline-eu/xgboost-jvm-packages/tree/master/jvm-packages/xgboost4j-example)
+
 ### XGBoost Spark
 
 XGBoost4J-Spark supports training XGBoost model through RDD and Dataframe
@@ -135,33 +219,3 @@ object SparkWithDataFrame {
   }
 }
 ```
-
-### XGBoost Flink
-```scala
-import ml.dmlc.xgboost4j.scala.flink.XGBoost
-import org.apache.flink.api.scala._
-import org.apache.flink.api.scala.ExecutionEnvironment
-import org.apache.flink.ml.MLUtils
-
-object DistTrainWithFlink {
-  def main(args: Array[String]) {
-    val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
-    // read trainining data
-    val trainData =
-      MLUtils.readLibSVM(env, "/path/to/data/agaricus.txt.train")
-    // define parameters
-    val paramMap = List(
-      "eta" -> 0.1,
-      "max_depth" -> 2,
-      "objective" -> "binary:logistic").toMap
-    // number of iterations
-    val round = 2
-    // train the model
-    val model = XGBoost.train(trainData, paramMap, round)
-    val predTrain = model.predict(trainData.map{x => x.vector})
-    model.saveModelToHadoop("file:///path/to/xgboost.model")
-  }
-}
-```
-
-
